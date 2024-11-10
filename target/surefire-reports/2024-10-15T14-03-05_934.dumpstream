@@ -1,0 +1,5 @@
+# Created at 2024-10-15T14:03:06.115
+Boot Manifest-JAR contains absolute paths in classpath 'E:\TS360\api-gateway\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+

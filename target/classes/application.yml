@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: api-gateway
+
+  cache:
+    type: redis
+
+  data:
+    redis:
+      host: 18.206.88.27
+      port: 6379
+
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns: "*"  # Specify the exact origin
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTIONS
+            allowCredentials: false
+      routes:
+        - id: authentication-public-route
+          uri: http://localhost:9096
+          predicates:
+            - Path=/auth/*/public/**
+            
+        - id: authentication-route
+          uri: http://localhost:9096
+          predicates:
+            - Path=/auth/**
+          filters:
+            - name: JwtAuthenticationFilter
+              args:
+               configProperty: JwtAuthenticationFilter.Config() # If your custom filter has any configuration
+#          filters:
+#            - name: JwtAuthenticationFilter
+#              args:
+#               configProperty: JwtAuthenticationFilter.Config() # need to add new filter to process subscription info
+              
+nirjhoy:
+  api:
+    gateway:
+      cache:
+        key:
+          prefix: nirjhoy
+      auth:
+        service: http://localhost:9096/subscription
+
+  subscription:
+    service:
+      jwtsecret: SecretKeyForNirjhoysMicroService
+      jwtExpirationMs: 15552000000
+
+server:
+  port: 8085
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+
